@@ -11,3 +11,7 @@ import:
 
 report:
 	venv/bin/python melhorenvio -r=report.csv
+
+reset-db:
+	rm database.db
+	venv/bin/python melhorenvio -p

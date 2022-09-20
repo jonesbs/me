@@ -5,25 +5,15 @@ class DB:
     async def initialize(self):
         self.db = await aiosqlite.connect("./database.db")
 
-    async def execute(self, sql: str):
-        await self.db.execute(sql)
+    async def execute(self, sql: str, parameters=None):
+        await self.db.execute(sql, parameters)
         await self.db.commit()
         return self.db.total_changes
 
-    async def fetch_one(self, sql: str):
-        try:
-            cursor = await self.db.execute(sql)
-            return await cursor.fetchone()
-        finally:
-            await cursor.close()
-
     async def fetch_all(self, sql: str):
-        try:
-            async with self.db.execute(sql) as cursor:
-                async for row in cursor:
-                    yield row
-        finally:
-            await cursor.close()
+        async with self.db.execute(sql) as cursor:
+            async for row in cursor:
+                yield row
 
     async def close(self):
         await self.db.close()
