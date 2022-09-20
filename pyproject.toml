@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "melhorenvio"
+version = "0.1.0"
+description = "teste admissao"
+authors = ["jhonatas souza"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+aiosqlite = "^0.17.0"
+progress = "^1.6"
+numpy = "^1.23.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

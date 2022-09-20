@@ -1,0 +1,6 @@
+__pycache__/*
+*.csv
+*.db
+*.txt
+venv/
+!requirements.txt
