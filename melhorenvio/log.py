@@ -2,6 +2,7 @@ import asyncio
 import json
 from progress.bar import ChargingBar
 from db import DB
+from symbol import parameters
 
 class Log:
     
@@ -12,7 +13,7 @@ class Log:
     def read_log(self, filename):
         with open (filename, mode="r") as reader:
             while reader:
-                line = reader.readline()
+                line = reader.readline().strip()
                 if not line:
                     break
 
@@ -25,7 +26,7 @@ class Log:
         request_time = request['latencies']['request']
         proxy_time =request['latencies']['proxy']
         gateway_time =request['latencies']['kong']
-        await db.execute(f"INSERT INTO logs (consumer_id, service_id, service_name, request_time, proxy_time, gateway_time) VALUES (\"{consumer_id}\", \"{service_id}\", \"{service_name}\", {request_time}, {proxy_time}, {gateway_time})")
+        await db.execute("INSERT INTO logs (consumer_id, service_id, service_name, request_time, proxy_time, gateway_time) VALUES (?, ?, ?, ?, ? ,?)", parameters=(consumer_id, service_id, service_name, request_time, proxy_time, gateway_time))
         return True
 
     def chunk_generator(self, line_generator, size):
@@ -48,7 +49,7 @@ class Log:
 
         
         total_lines = self.get_total_lines_file(file_path)
-        with ChargingBar('Processing', max=total_lines) as bar:
+        with ChargingBar('Importing', max=total_lines) as bar:
             for list_items in self.chunk_generator(self.read_log(file_path), chunk_size):
                 await asyncio.gather(*[self.save_log_line(item, db) for item in list_items])
                 bar.next(chunk_size)

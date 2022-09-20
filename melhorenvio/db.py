@@ -5,8 +5,8 @@ class DB:
     async def initialize(self):
         self.db = await aiosqlite.connect("./database.db")
 
-    async def execute(self, sql: str):
-        await self.db.execute(sql)
+    async def execute(self, sql: str, parameters=None):
+        await self.db.execute(sql, parameters)
         await self.db.commit()
         return self.db.total_changes
 
